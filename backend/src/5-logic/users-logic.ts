@@ -1,5 +1,6 @@
 import dal from '../2-utils/dal'
 import { generateToken } from '../2-utils/jwtAuth';
+import { OkPacket } from 'mysql';
 import Credentials from '../4-models/Credentials';
 import { UnauthorizedError, ValidationError } from '../4-models/Error'
 import Role from '../4-models/Role';
@@ -24,19 +25,17 @@ export const register = async (newUser:User):Promise<string> => {
     
     // check if there is a user with the same email in the db
     const userWithSameEmail = await getUserByEmail(newUser.email)
-
-    console.log('who are you???', userWithSameEmail);
-    
     if (userWithSameEmail) throw new ValidationError("email already register")
-    // newUser.role = Role.User
-    console.log(newUser);
+    
+    newUser.role = Role.User
     
     const sql = `INSERT INTO users (firstName,lastName,email,password,role)
     VALUES ('${newUser.firstName}','${newUser.lastName}','${newUser.email}','${newUser.password}','${newUser.role}');`
 
     try {
-        const registeredUser = await dal.execute<User>(sql)
-        newUser.userCode = registeredUser.userCode
+        const registeredUser = await dal.execute<OkPacket>(sql)
+        console.log("registeredUser where is my userCode",registeredUser);
+        newUser.userCode = +registeredUser.insertId
         return generateToken(newUser);
     } catch (err) {
         throw err

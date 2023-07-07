@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { registerAsync } from '../../fetch/auth';
+import  { useNavigate  } from 'react-router-dom'
 import * as Auth from '../../auth/authSlice';
 import User from '../../models/User';
 import FormGroupWithError from '../FormGroupWithError/FormGroupWithError';
@@ -11,20 +12,19 @@ interface RegisterProps { }
 
 const Register: FC<RegisterProps> = () => {
     const dispatch = useAppDispatch();
-
+    const navigate = useNavigate();
     const { register, handleSubmit } = useForm<User>();
 
     const registerHandler = async (user: User) => {
         try {
             const token = await registerAsync(user);
             dispatch(Auth.register(token))
-            console.log(token)
+            dispatch(Auth.login(token))
+            navigate('/home')
         } catch (err) {
             console.log(err)
         }
     }
-
-
 
     return (
         <div className={`Box ${styles.Register}`}>
