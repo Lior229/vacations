@@ -5,9 +5,7 @@ import User from '../models/User';
 
 export const registerAsync = async (user: User): Promise<string> => {
     const response = await axios.post(`${BASE_API_URL}/users/register`, user);
-    console.log("user:",user);
     console.log("response", response);
-    
     const token = response.data;
     return token;
 }

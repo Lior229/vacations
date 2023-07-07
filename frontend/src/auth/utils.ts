@@ -27,6 +27,5 @@ export const handleToken = (state: AuthState, token: string) => {
     state.token = token;
     const container: { user: User } = jwtDecode(token);
     state.user = container.user;
-    // setAuthHeaders
     sessionStorage.setItem(AUTH_LOGIN_SESSION_STORAGE_KEY, token);
 }

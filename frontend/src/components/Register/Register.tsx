@@ -19,7 +19,6 @@ const Register: FC<RegisterProps> = () => {
         try {
             const token = await registerAsync(user);
             dispatch(Auth.register(token))
-            dispatch(Auth.login(token))
             navigate('/home')
         } catch (err) {
             console.log(err)

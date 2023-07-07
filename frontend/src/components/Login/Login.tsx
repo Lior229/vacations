@@ -19,7 +19,6 @@ const Login: FC<LoginProps> = () => {
     const loginHandler = async (credentials: Credentials) => {
         try {
             const token = await loginAsync(credentials);
-            console.log(token);
             dispatch(login(token));
             navigate('/home')
 
