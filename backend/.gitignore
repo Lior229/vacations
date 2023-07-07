@@ -5,7 +5,7 @@
 # dependencies
 /node_modules
 node_modules
-
+/logger.txt
 .pdf
 /.pnp
 .pnp.js

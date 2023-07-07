@@ -1,13 +1,12 @@
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../../auth/authSlice';
-import { loginAsync } from '../../../fetch/auth';
-import { useAppDispatch } from '../../../hooks';
+import { login } from '../../auth/authSlice';
+import { loginAsync } from '../../fetch/auth';
+import { useAppDispatch } from '../../hooks';
 import { NavLink } from 'react-router-dom';
-import Credentials from '../../../models/Credentials';
-import Button from '../../Button/Button';
-import FormGroupWithError from '../../FormGroupWithError/FormGroupWithError';
+import Credentials from '../../models/Credentials';
+import FormGroupWithError from '../FormGroupWithError/FormGroupWithError';
 import styles from './Login.module.scss';
 
 interface LoginProps { }
@@ -19,11 +18,10 @@ const Login: FC<LoginProps> = () => {
 
     const loginHandler = async (credentials: Credentials) => {
         try {
-            console.log("try to login");
             const token = await loginAsync(credentials);
             console.log(token);
             dispatch(login(token));
-            // navigate('/home')
+            navigate('/home')
 
         } catch (err) {
             console.log('error', err)
@@ -35,8 +33,8 @@ const Login: FC<LoginProps> = () => {
             <h2>Login</h2>
             <form onSubmit={handleSubmit(loginHandler)}>
                 <FormGroupWithError>
-                    <label>Username:</label>
-                    <input type="text"  {...register('username')} />
+                    <label>email:</label>
+                    <input type="text"  {...register('email')} />
                 </FormGroupWithError>
 
                 <FormGroupWithError>
@@ -44,7 +42,7 @@ const Login: FC<LoginProps> = () => {
                     <input type="password"  {...register('password')} />
                 </FormGroupWithError>
 
-                <Button>Login</Button>
+                <button>Login</button>
             </form>
             <NavLink to="/register">Register</NavLink>
         </div>        

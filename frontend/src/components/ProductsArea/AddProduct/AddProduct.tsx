@@ -4,7 +4,6 @@ import Product from '../../../models/Product';
 import validation from './validation';
 import styles from './AddProduct.module.scss';
 import FormGroupWithError from '../../FormGroupWithError/FormGroupWithError';
-import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';
 import { addProduct as addProductAsync } from '../../../utils/fetch';
 import { useAppDispatch } from '../../../hooks';
@@ -13,10 +12,6 @@ import { addProduct } from '../productsSlice';
 interface AddProductProps {
     onClose: () => void;
 }
-
-//curring
-
-
 
 const AddProduct: FC<AddProductProps> = ({ onClose }) => {
     const dispatch = useAppDispatch();
@@ -66,10 +61,7 @@ const AddProduct: FC<AddProductProps> = ({ onClose }) => {
                         <input type="file" accept='image/*' {...register('image')} />
                     </FormGroupWithError>
 
-
-
-                    <Button>Add</Button>
-
+                    <button>Add</button>
                 </form>
 
 

@@ -4,7 +4,6 @@ import Product from '../../../models/Product';
 import validation from './validation';
 import styles from './EditProduct.module.scss';
 import FormGroupWithError from '../../FormGroupWithError/FormGroupWithError';
-import Button from '../../Button/Button';
 import Modal from '../../Modal/Modal';
 import { updateProduct as updateProductAsync } from '../../../utils/fetch';
 import { updateProduct } from '../productsSlice';
@@ -74,10 +73,7 @@ const EditProduct: FC<EditProductProps> = ({ onClose, product }) => {
                         <input type="file" accept='image/*' {...register('image')} />
                     </FormGroupWithError>
 
-
-
-                    <Button>Edit</Button>
-
+                    <button>Edit</button>
                 </form>
 
 

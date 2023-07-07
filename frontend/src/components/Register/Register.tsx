@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
 import { useForm } from 'react-hook-form';
-import { registerAsync } from '../../../fetch/auth';
-import * as Auth from '../../../auth/authSlice';
-import User from '../../../models/User';
-import Button from '../../Button/Button';
-import FormGroupWithError from '../../FormGroupWithError/FormGroupWithError';
+import { registerAsync } from '../../fetch/auth';
+import * as Auth from '../../auth/authSlice';
+import User from '../../models/User';
+import FormGroupWithError from '../FormGroupWithError/FormGroupWithError';
 import styles from './Register.module.scss';
-import { useAppDispatch } from '../../../hooks';
+import { useAppDispatch } from '../../hooks';
 
 interface RegisterProps { }
 
@@ -52,7 +51,7 @@ const Register: FC<RegisterProps> = () => {
                     <input type="password"  {...register('password')} />
                 </FormGroupWithError>
 
-                <Button>Register</Button>
+                <button>Register</button>
             </form>
         </div>
     )

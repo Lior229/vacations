@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from "express";
 import { getUserByEmail, login, register } from '../5-logic/users-logic'
 import User from "../4-models/User";
 import Credentials from "../4-models/Credentials";
+import { log } from "console";
 
 const router = express.Router(); 
 
