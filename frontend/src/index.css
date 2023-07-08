@@ -5,8 +5,9 @@
 }
 
 html,body,#root{
-    background-image: linear-gradient(45deg,lightblue,white);
+    background-image: linear-gradient(to right,lightblue,white);
     color:black;
+    text-align: center;
 }
 
 .Box{

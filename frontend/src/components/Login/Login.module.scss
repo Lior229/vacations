@@ -1,1 +1,11 @@
-.Login {}
+.Login {
+    display: inline-grid;
+    margin:10px;
+    padding:10px;
+
+    &__error {
+        color: red;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+}

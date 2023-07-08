@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { registerAsync } from '../../fetch/auth';
 import  { useNavigate  } from 'react-router-dom'
@@ -7,21 +7,23 @@ import User from '../../models/User';
 import FormGroupWithError from '../FormGroupWithError/FormGroupWithError';
 import styles from './Register.module.scss';
 import { useAppDispatch } from '../../hooks';
+import validation from '../validation';
 
 interface RegisterProps { }
 
 const Register: FC<RegisterProps> = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { register, handleSubmit } = useForm<User>();
+    const { register, handleSubmit, formState} = useForm<User>();
+    const [registerError, setRegisterError] = useState("");
 
     const registerHandler = async (user: User) => {
         try {
             const token = await registerAsync(user);
             dispatch(Auth.register(token))
             navigate('/home')
-        } catch (err) {
-            console.log(err)
+        } catch (err: any) {
+            setRegisterError(err.response.data)
         }
     }
 
@@ -29,28 +31,27 @@ const Register: FC<RegisterProps> = () => {
         <div className={`Box ${styles.Register}`}>
             <h2>Register</h2>
             <form onSubmit={handleSubmit(registerHandler)}>
-
-                <FormGroupWithError>
+                <FormGroupWithError error={formState.errors.firstName?.message}>
                     <label>First name:</label>
-                    <input type="text" {...register('firstName')} />
+                    <input type="text" {...register('firstName', validation.firstName)} />
                 </FormGroupWithError>
 
-                <FormGroupWithError>
+                <FormGroupWithError error={formState.errors.lastName?.message}>
                     <label>Last name:</label>
-                    <input type="text" {...register('lastName')} />
+                    <input type="text" {...register('lastName', validation.lastName)} />
                 </FormGroupWithError>
 
-                <FormGroupWithError>
-                    <label>Email:</label>
-                    <input type="text" {...register('email')} />
-                </FormGroupWithError>
+                <FormGroupWithError error={formState.errors.email?.message}>
+                        <label>email:</label>
+                        <input type="email" {...register('email', validation.email)} />
+                    </FormGroupWithError>
 
-                <FormGroupWithError>
-                    <label>Password:</label>
-                    <input type="password"  {...register('password')} />
+                <FormGroupWithError error={formState.errors.password?.message}>
+                        <label>Password:</label>
+                        <input type="password"  {...register('password', validation.password)} />
                 </FormGroupWithError>
-
                 <button>Register</button>
+                {registerError && <p className={styles.Register__error}>{registerError}</p>}
             </form>
         </div>
     )

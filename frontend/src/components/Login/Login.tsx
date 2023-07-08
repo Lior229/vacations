@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../auth/authSlice';
@@ -8,43 +8,46 @@ import { NavLink } from 'react-router-dom';
 import Credentials from '../../models/Credentials';
 import FormGroupWithError from '../FormGroupWithError/FormGroupWithError';
 import styles from './Login.module.scss';
+import validation from '../validation';
 
 interface LoginProps { }
 
 const Login: FC<LoginProps> = () => {
     const dispatch = useAppDispatch();
-    const { register, handleSubmit } = useForm<Credentials>();
+    const { register, handleSubmit, formState} = useForm<Credentials>();
     const navigate = useNavigate();
+    const [loginError, setloginError] = useState("");
 
     const loginHandler = async (credentials: Credentials) => {
         try {
             const token = await loginAsync(credentials);
             dispatch(login(token));
             navigate('/home')
-
-        } catch (err) {
-            console.log('error', err)
+        } catch (err: any) {
+            setloginError(err.response.data)
         }
     }
 
     return (
-        <div className={`Box ${styles.Login}`}>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit(loginHandler)}>
-                <FormGroupWithError>
-                    <label>email:</label>
-                    <input type="text"  {...register('email')} />
-                </FormGroupWithError>
+        <div className={styles.Login}>
+            <div className={`Box`}>
+                <h2>Login</h2>
+                <form onSubmit={handleSubmit(loginHandler)}>
+                    <FormGroupWithError error={formState.errors.email?.message}>
+                        <label>email:</label>
+                        <input type="email" {...register('email', validation.email)} />
+                    </FormGroupWithError>
 
-                <FormGroupWithError>
-                    <label>Password:</label>
-                    <input type="password"  {...register('password')} />
-                </FormGroupWithError>
-
-                <button>Login</button>
-            </form>
-            <NavLink to="/register">Register</NavLink>
-        </div>        
+                    <FormGroupWithError error={formState.errors.password?.message}>
+                        <label>Password:</label>
+                        <input type="password"  {...register('password', validation.password)} />
+                    </FormGroupWithError>
+                    <button>login</button>
+                    {loginError && <p className={styles.Login__error}>{loginError}</p>}
+                </form>
+            </div>
+            <NavLink to="/register" className={`Box`}>Create account</NavLink>
+        </div>       
     )
 }
 
