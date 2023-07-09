@@ -5,8 +5,12 @@ import Vacation from "../4-models/Vacation";
 
 export const getAllVacations =async ():Promise<Vacation[]> => {
     try {
-        const sql = `SELECT * FROM vacations`
-        return await dal.execute<Vacation[]>(sql)
+        const sql = `SELECT V.*, COUNT(f.vacationCode) as numberOfFollowers
+                    FROM vacations AS V INNER JOIN followers as F
+                    ON V.vacationCode = f.vacationCode
+                    GROUP BY V.vacationCode, f.vacationCode`
+        let vacations = await dal.execute<Vacation[]>(sql)
+        return vacations
     } catch (err) {
         throw err
     }
@@ -25,11 +29,14 @@ export const addNewVacation =async (vacationToAdd:Vacation):Promise<Vacation> =>
 
     try {
         const sql = `INSERT INTO vacations
-        (destination,description,startDate,endDate,price,image)
+        (destination,description,startDate,endDate,price,imageName)
         VALUES ('${vacationToAdd.destination}','${vacationToAdd.description}',
-        '${vacationToAdd.startDate}','${vacationToAdd.endDate}',${vacationToAdd.price},'${vacationToAdd.image}');`
+        '${vacationToAdd.startDate}','${vacationToAdd.endDate}',${vacationToAdd.price},'${vacationToAdd.imageName}');`
         const newVacation = await dal.execute<Vacation>(sql)
         vacationToAdd.vacationCode = newVacation.vacationCode
+
+        //TODO: insert followers
+
         return vacationToAdd
     } catch (err) {
         throw err
@@ -56,7 +63,7 @@ export const updateVacation =async (vacationToUpdate:Vacation):Promise<Vacation>
                 startDate = '${vacationToUpdate.startDate}',
                 endDate = '${vacationToUpdate.endDate}',
                 price = ${vacationToUpdate.price},
-                image = '${vacationToUpdate.image}'
+                imageName = '${vacationToUpdate.imageName}'
         WHERE vacationCode = ${vacationToUpdate.vacationCode}
     `;
 
@@ -66,7 +73,9 @@ export const updateVacation =async (vacationToUpdate:Vacation):Promise<Vacation>
         throw new ResourceNotFoundError(vacationToUpdate.vacationCode);
     }
 
+    vacationToUpdate.vacationCode = info.insertId
     return vacationToUpdate;
+    
 } else {
     throw new ValidationError("vacation not valid missing vacation id");  
 }}

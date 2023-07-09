@@ -7,17 +7,18 @@ import verifyAdmin from "../3-middleware/verify-admin";
 const router = express.Router(); 
 
 // GET http://localhost:3001/api/vacations
-router.get('/vacations',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
+router.get('/vacations', async (request: Request, response: Response, next: NextFunction) => {
+// router.get('/vacations',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
     try {
-        const vacations = await getAllVacations
+        const vacations = await getAllVacations()
         response.json(vacations)
     } catch (err: any) {
         next(err);
     }
 })
 
-// POST http://localhost:3001/api/vacations/new
-router.post('/vacations/new',verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
+// POST http://localhost:3001/api/vacations/
+router.post('/vacations',verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const newVacation = new Vacation(request.body);
         const addedVacation = await addNewVacation(newVacation);

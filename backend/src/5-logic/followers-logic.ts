@@ -1,16 +1,13 @@
-//  בכל כרטיסיה ניתן לראות את כלל הפרטים של החופשה, את מספר ה-Followers שיש לה מכלל 
-// המשתמשים והאם המשתמש הנוכחי עוקב אחריה או לא
-//  משתמש יכול לבצע Follow או Unfollow לחופשה
 import { OkPacket } from "mysql";
 import dal from "../2-utils/dal";
 import { ValidationError } from "../4-models/Error";
-import User from "../4-models/User";
 
-export const getFollowersOfVacation =async (vacationCode:number):Promise<User[]> => {
+export const getFollowersOfVacation =async (vacationCode:number):Promise<number[]> => {
     try {
-        const sql = `SELECT * FROM followers
-                     WHERE vacationCode = ${vacationCode}`;
-        return await dal.execute<User[]>(sql)
+        const sql = `SELECT userCode FROM followers
+                     WHERE vacationCode = ${vacationCode}`;   
+        const followers = await dal.execute<{userCode: number}[]>(sql)
+        return followers.map(follower => follower.userCode)
     } catch (err) {
         throw err
     }

@@ -5,13 +5,9 @@ import { AuthState } from "./authSlice";
 
 
 export const setInitialAuthState = (): AuthState => {
-
-    // Take the token from the session storage (if exists)
     const token = sessionStorage.getItem(AUTH_LOGIN_SESSION_STORAGE_KEY);
     let user = null;
-
     if (token) {
-        // setAuthHeaders
         const container: { user: User } = jwtDecode(token);
         user = container.user;
     }

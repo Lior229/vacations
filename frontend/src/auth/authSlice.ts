@@ -21,7 +21,6 @@ export const authSlice = createSlice({
             handleToken(state, token);
         },
         logout: (state) => {
-            //remove token
             state.token = null;
             state.user = null
             sessionStorage.removeItem(AUTH_LOGIN_SESSION_STORAGE_KEY);
@@ -29,7 +28,6 @@ export const authSlice = createSlice({
     }
 });
 
-// export the action creators
-export const { register, login, logout } = authSlice.actions;
 
+export const { register, login, logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,4 +1,5 @@
 import joi from 'joi'
+import User from './User'
 
 export default class Vacation {
     public vacationCode?: number
@@ -7,7 +8,8 @@ export default class Vacation {
     public startDate: Date
     public endDate: Date
     public price: number
-    public image: string
+    public imageName: string;
+    public numberOfFollowers: number;
 
     public constructor(vacation: Vacation) {
         this.vacationCode = vacation.vacationCode
@@ -16,7 +18,8 @@ export default class Vacation {
         this.startDate = vacation.startDate
         this.endDate = vacation.endDate
         this.price = vacation.price
-        this.image = vacation.image        
+        this.imageName = vacation.imageName  
+        this.numberOfFollowers = vacation.numberOfFollowers      
     }
 
     private static validationSchema = joi.object({
@@ -26,7 +29,7 @@ export default class Vacation {
         startDate: joi.date().required(),
         endDate: joi.date().required(),
         price: joi.number().integer().required().positive().max(10000),
-        image: joi.string().required().max(45)
+        imageName: joi.string().required().max(45)
     })
 
     public validation(): string | undefined {

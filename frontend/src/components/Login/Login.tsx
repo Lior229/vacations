@@ -42,7 +42,7 @@ const Login: FC<LoginProps> = () => {
                         <label>Password:</label>
                         <input type="password"  {...register('password', validation.password)} />
                     </FormGroupWithError>
-                    <button>login</button>
+                    <button className={`Box`}>login</button>
                     {loginError && <p className={styles.Login__error}>{loginError}</p>}
                 </form>
             </div>

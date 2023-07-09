@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import Home from '../HomeArea/Home/Home';
+import Home from '../Home/Home';
 import React, { FC } from 'react';
 import styles from './Router.module.scss';
 import PageNotFound from '../PageNotFound/PageNotFound';

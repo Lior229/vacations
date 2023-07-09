@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { useAppSelector } from '../../../hooks'
+import { useAppSelector } from '../../hooks'
 import styles from './Home.module.scss';
 
 interface HomeProps { }
