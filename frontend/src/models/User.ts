@@ -4,7 +4,7 @@ interface User {
     lastName: string;
     email: string;
     password: string;
-    likedVacations: {[key: number]: boolean | undefined};
+    likedVacations: {[key: number]: boolean};
 }
 
 export default User;

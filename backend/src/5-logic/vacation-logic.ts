@@ -2,6 +2,7 @@ import { OkPacket } from "mysql";
 import dal from "../2-utils/dal";
 import { ResourceNotFoundError, ValidationError } from "../4-models/Error";
 import Vacation from "../4-models/Vacation";
+import moment from 'moment';
 
 export const getAllVacations =async ():Promise<Vacation[]> => {
     try {
@@ -10,7 +11,7 @@ export const getAllVacations =async ():Promise<Vacation[]> => {
                      ON V.vacationCode = f.vacationCode
                      GROUP BY V.vacationCode, f.vacationCode
                      ORDER BY startDate`
-        let vacations = await dal.execute<Vacation[]>(sql)
+        let vacations = await dal.execute<Vacation[]>(sql)        
         return vacations
     } catch (err) {
         throw err

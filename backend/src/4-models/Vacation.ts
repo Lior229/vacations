@@ -14,7 +14,7 @@ export default class Vacation {
     public constructor(vacation: Vacation) {
         this.vacationCode = vacation.vacationCode
         this.destination = vacation.destination
-        this.description = vacation.description
+        this.description = vacation.description 
         this.startDate = vacation.startDate
         this.endDate = vacation.endDate
         this.price = vacation.price
