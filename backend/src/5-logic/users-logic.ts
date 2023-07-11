@@ -4,8 +4,9 @@ import { OkPacket } from 'mysql';
 import Credentials from '../4-models/Credentials';
 import { UnauthorizedError, ValidationError } from '../4-models/Error'
 import Role from '../4-models/Role';
-import User from '../4-models/User'
+import User from '../4-models/User';
 import * as EmailValidator from 'email-validator';
+import { getFollowingVacationPerUser } from './followers-logic';
 
 export const getUserByEmail = async (email:string):Promise<User> => {
     try {
@@ -34,7 +35,6 @@ export const register = async (newUser:User):Promise<string> => {
 
     try {
         const registeredUser = await dal.execute<OkPacket>(sql)
-        console.log("registeredUser where is my userCode",registeredUser);
         newUser.userCode = +registeredUser.insertId
         return generateToken(newUser);
     } catch (err) {
@@ -45,7 +45,7 @@ export const register = async (newUser:User):Promise<string> => {
 export const login = async (credentials: Credentials): Promise<string> => {
 
     // get user by email
-    const user = await getUserByEmail(credentials.email)
+    let user = await getUserByEmail(credentials.email)
 
     //if user not exists 
     if (!user) throw new UnauthorizedError('user was not found');
@@ -55,6 +55,11 @@ export const login = async (credentials: Credentials): Promise<string> => {
          throw new UnauthorizedError('Incorrect password');
     }
 
+    // get all vacations the user follow
+    user.hashFollowing = await getFollowingVacationPerUser(user.userCode!)
+
+    console.log("user ", user);
+    
     //generate token
     return generateToken(user);
 }

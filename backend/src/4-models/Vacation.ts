@@ -29,7 +29,8 @@ export default class Vacation {
         startDate: joi.date().required(),
         endDate: joi.date().required(),
         price: joi.number().integer().required().positive().max(10000),
-        imageName: joi.string().required().max(45)
+        imageName: joi.string().required().max(45),
+        numberOfFollowers: joi.forbidden()
     })
 
     public validation(): string | undefined {

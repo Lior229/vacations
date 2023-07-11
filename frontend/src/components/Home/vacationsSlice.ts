@@ -35,11 +35,10 @@ export const vacationSlice = createSlice({
             if (indexToDelete >= 0) {state.vacations.splice(indexToDelete, 1)}
         },
         addFollower: (state, { payload: follower }: PayloadAction<User>) => {
-            state.vacation?.followers.push(follower)
+            state.vacation!.numberOfFollowers++
         },
         removeFollower: (state, { payload: follower }: PayloadAction<User>) => {
-            const indexToDelete = state.vacation!.followers.findIndex((f) => f.userCode === follower.userCode);
-            if (indexToDelete >= 0) {state.vacation?.followers.splice(indexToDelete, 1)}
+            state.vacation!.numberOfFollowers--
         }
     }
 });

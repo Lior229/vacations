@@ -35,7 +35,6 @@ export const updateVacation = async (vacation: vacation): Promise<vacation> => {
     formData.append('endDate', vacation.endDate.toDateString());
     formData.append('price', vacation.price.toString());
     formData.append('imageName', vacation.imageName);
-    formData.append('followers', JSON.stringify(vacation.followers));
 
     // formData.append('image', vacation.image[0]);   //image = FileList image[0] = File  / Blob
     // TODO: update image file at local folder?

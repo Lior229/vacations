@@ -2,12 +2,18 @@ import { OkPacket } from "mysql";
 import dal from "../2-utils/dal";
 import { ValidationError } from "../4-models/Error";
 
-export const getFollowersOfVacation =async (vacationCode:number):Promise<number[]> => {
+export const getFollowingVacationPerUser =async (userCode:number):Promise<{[key: number]: boolean}> => {
     try {
-        const sql = `SELECT userCode FROM followers
-                     WHERE vacationCode = ${vacationCode}`;   
-        const followers = await dal.execute<{userCode: number}[]>(sql)
-        return followers.map(follower => follower.userCode)
+        const sql = `SELECT vacationCode FROM followers
+                     WHERE userCode = ${userCode}`; 
+                       
+        const likedVacationsCode = await dal.execute<{vacationCode: number}[]>(sql)
+
+        let objectLikedVacations = likedVacationsCode.reduce(
+            (accumulator, target) => ({ ...accumulator, [target.vacationCode]: true })
+            ,{});
+
+        return objectLikedVacations
     } catch (err) {
         throw err
     }

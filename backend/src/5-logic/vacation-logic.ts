@@ -5,10 +5,11 @@ import Vacation from "../4-models/Vacation";
 
 export const getAllVacations =async ():Promise<Vacation[]> => {
     try {
-        const sql = `SELECT V.*, COUNT(f.vacationCode) as numberOfFollowers
-                    FROM vacations AS V INNER JOIN followers as F
-                    ON V.vacationCode = f.vacationCode
-                    GROUP BY V.vacationCode, f.vacationCode`
+        const sql = `SELECT V.*, COUNT(f.userCode) as numberOfFollowers
+                     FROM vacations AS V LEFT JOIN followers as F
+                     ON V.vacationCode = f.vacationCode
+                     GROUP BY V.vacationCode, f.vacationCode
+                     ORDER BY startDate`
         let vacations = await dal.execute<Vacation[]>(sql)
         return vacations
     } catch (err) {
@@ -50,6 +51,8 @@ export const deleteVacation =async (vacationCodeToDelete:number):Promise<void> =
     if (info.affectedRows === 0) {
         throw new ResourceNotFoundError(vacationCodeToDelete);
     }
+
+    // TODO: delete all followers
 }
 
 export const updateVacation =async (vacationToUpdate:Vacation):Promise<Vacation> => {

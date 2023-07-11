@@ -1,4 +1,5 @@
-SELECT V.*, COUNT(f.vacationCode) as numberOfFollowers
-FROM vacations AS V INNER JOIN followers as F
+SELECT V.*, COUNT(f.userCode) as numberOfFollowers
+FROM vacations AS V LEFT JOIN followers as F
 ON V.vacationCode = f.vacationCode
 GROUP BY V.vacationCode, f.vacationCode
+ORDER BY startDate
