@@ -3,6 +3,7 @@ import {getAllVacations, addNewVacation, deleteVacation, updateVacation} from '.
 import Vacation from "../4-models/Vacation";
 import verifyLoggedIn from '../3-middleware/verify-logged-in';
 import verifyAdmin from "../3-middleware/verify-admin";
+import path from "path";
 
 const router = express.Router(); 
 
@@ -48,5 +49,19 @@ router.delete('/vacations/:vacationCode',verifyAdmin, async (request: Request, r
         next(err);
     }
 });
+
+
+//GET http://localhost:3001/api/vacations/images/:imageName
+router.get("/vacations/images/:imageName", async (request: Request, response: Response, next: NextFunction) => {
+
+    try {
+        const imageName = request.params.imageName;
+        const absolutePath = path.join(__dirname, '..', 'assets', 'images', imageName);
+        response.sendFile(absolutePath);
+    } catch (err: any) {
+        next(err);
+    }
+
+})
 
 export default router;

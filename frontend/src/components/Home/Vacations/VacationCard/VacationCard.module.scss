@@ -1,0 +1,48 @@
+.VacationCard {
+    // width: 200px;
+    // height: 200px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        position: relative;
+        border: 1px solid darkblue;
+        border-radius: 8px;
+        height: 80%;
+        color: white;
+        text-shadow: 0 0 3px black;
+
+        & img {
+            object-fit: cover;
+        }
+
+        &__title{
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            margin:0;
+            padding:0;
+        }
+
+        &__followers {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            border:1px solid black;
+            margin:3px;
+            padding:3px;
+            border-radius: 10px;
+            color: red;
+        }
+
+    }
+
+    &__content {
+        border: 1px solid black;
+        padding: 8px;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        height: 20%;
+    }
+}

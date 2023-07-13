@@ -4,6 +4,7 @@ import styles from './Home.module.scss';
 import { getVacations } from '../../fetch/vacations';
 import { setVacations } from './vacationsSlice';
 import Loader from '../Loader/Loader';
+import Vacations from './Vacations/Vacations';
 
 interface HomeProps { }
 
@@ -16,13 +17,13 @@ const Home: FC<HomeProps> = () => {
     useEffect(() => {
         setIsLoading(true);
         getVacations().then((vacations) =>{
-            dispatch(setVacations(vacations))
+            dispatch(setVacations(vacations))  
         }).catch((err) => {
             console.log(err.message)
         }).finally(() => {
             setIsLoading(false);
         });
-    })
+    },[])
 
     if (isLoading) {
         return (
@@ -34,7 +35,7 @@ const Home: FC<HomeProps> = () => {
 
     return (
         <div className={styles.Home}>
-            <h1>home</h1>
+            <Vacations/>
         </div>
     )
 }
