@@ -2,20 +2,22 @@ import React, { FC, useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import styles from './Home.module.scss';
 import { getVacations } from '../../fetch/vacations';
-import { setVacations } from './vacationsSlice';
+import { setVacations } from './Vacations/vacationsSlice';
 import Loader from '../Loader/Loader';
 import Vacations from './Vacations/Vacations';
+import {logout} from '../../auth/authSlice'
 import { startLoading, stopLoading } from '../Loader/loaderSlice';
+import { NavLink } from 'react-router-dom';
+import Role from '../../models/Role';
 
 interface HomeProps { }
 
 const Home: FC<HomeProps> = () => {
     const dispatch = useAppDispatch();
-    const { vacations } = useAppSelector((state) => state.vacationsState);
     const { isLoading } = useAppSelector((state) => state.loaderState);
     const { user } = useAppSelector((state) => state.authState);
     
-    useEffect(() => {
+    useEffect(() => {      
         startLoading()
         getVacations().then((vacations) =>{
             dispatch(setVacations(vacations))  
@@ -25,6 +27,10 @@ const Home: FC<HomeProps> = () => {
             stopLoading()
         });
     },[])
+
+    const logOutHandler = () => {
+        dispatch(logout());
+    }
 
     if (isLoading) {
         return (
@@ -36,6 +42,8 @@ const Home: FC<HomeProps> = () => {
 
     return (
         <div className={styles.Home}>
+            {user?.role===Role.Admin &&  <NavLink to="/add"> Add new vacation </NavLink> }
+            {user &&  <NavLink to="/login" onClick={logOutHandler}> Logout </NavLink> }
             <Vacations/>
         </div>
     )

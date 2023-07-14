@@ -4,8 +4,7 @@ import { useAppSelector } from '../../hooks';
 import styles from './ProtectedRoute.module.scss';
 
 interface ProtectedRouteProps {
-  // children: ReactNode;
-  children: ReactElement
+  children: ReactNode | ReactElement;
 }
 
 const ProtectedRoute: FC<ProtectedRouteProps> = ({children}) => {
@@ -16,7 +15,7 @@ const ProtectedRoute: FC<ProtectedRouteProps> = ({children}) => {
       if (!user){
           navigate('/login')
       }
-  }, [user])
+  }, [])
   
   const renderContent = () => {
       if (user) {

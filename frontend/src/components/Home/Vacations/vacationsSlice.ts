@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import Vacation from '../../models/Vacation'
-import User from '../../models/User';
+import Vacation from '../../../models/Vacation'
 
 interface VacationState {
     vacations: Vacation[],

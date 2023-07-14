@@ -12,14 +12,7 @@ interface RouterProps { }
 const Router: FC<RouterProps> = () => (
     <Routes>
         {/*  Default route*/}
-        <Route path="/" element={<Navigate to="/login" />} />
-
-        {/* Home */}
-        <Route path="/home" element={
-        <ProtectedRoute>
-        <Home/>
-        </ProtectedRoute>
-        }/>
+        <Route path="/" element={<Navigate to="/home" />} />
 
         {/* Register */}
         <Route path="/register" element={<Register />} />
@@ -27,8 +20,23 @@ const Router: FC<RouterProps> = () => (
         {/* Login */}
         <Route path="/login" element={<Login />} />
 
-        {/*  Default route*/}
-        <Route path="/" element={<Navigate to="/login" />} />
+        {/* Home */}
+
+        {/* <ProtectedRoute>
+            <Route path="/home" element={<Home/> }/>
+        </ProtectedRoute> */}
+
+        <Route path="/home" element={
+            <ProtectedRoute>
+            <Home/>
+            </ProtectedRoute>
+        }/>
+
+        <Route path="/new" element={
+            <ProtectedRoute>
+            <Home/>
+            </ProtectedRoute>
+        }/>
         
         {/* Page not Found */}
         <Route path="*" element={<PageNotFound />} />
