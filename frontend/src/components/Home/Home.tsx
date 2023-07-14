@@ -5,23 +5,24 @@ import { getVacations } from '../../fetch/vacations';
 import { setVacations } from './vacationsSlice';
 import Loader from '../Loader/Loader';
 import Vacations from './Vacations/Vacations';
+import { startLoading, stopLoading } from '../Loader/loaderSlice';
 
 interface HomeProps { }
 
 const Home: FC<HomeProps> = () => {
     const dispatch = useAppDispatch();
     const { vacations } = useAppSelector((state) => state.vacationsState);
-    const [isLoading, setIsLoading] = useState(false);
+    const { isLoading } = useAppSelector((state) => state.loaderState);
     const { user } = useAppSelector((state) => state.authState);
     
     useEffect(() => {
-        setIsLoading(true);
+        startLoading()
         getVacations().then((vacations) =>{
             dispatch(setVacations(vacations))  
         }).catch((err) => {
             console.log(err.message)
         }).finally(() => {
-            setIsLoading(false);
+            stopLoading()
         });
     },[])
 

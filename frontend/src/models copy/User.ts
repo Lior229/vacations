@@ -1,4 +1,4 @@
-import Role from "./Role";
+import Role from "../models/Role";
 
 interface User {
     userCode: number;

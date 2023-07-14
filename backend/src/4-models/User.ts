@@ -8,7 +8,7 @@ export default class User{
     public email: string;
     public password: string;
     public role: Role;
-    public hashFollowing: {[key: number]: boolean};
+    public likedVacations: {[key: number]: boolean};
 
     public constructor(user:User){
         this.userCode = user.userCode
@@ -17,7 +17,7 @@ export default class User{
         this.email = user.email
         this.password = user.password
         this.role = user.role
-        this.hashFollowing = user.hashFollowing
+        this.likedVacations = user.likedVacations
     }
 
     private static validationSchema = Joi.object({
@@ -27,7 +27,7 @@ export default class User{
         email: Joi.string().required().min(2).max(45),
         password: Joi.string().required().min(2).max(45),
         role: Joi.forbidden(),
-        following: Joi.forbidden()
+        likedVacations: Joi.forbidden()
     })
 
     public validation(): string | undefined{

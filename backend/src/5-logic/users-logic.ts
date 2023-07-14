@@ -56,10 +56,10 @@ export const login = async (credentials: Credentials): Promise<string> => {
     }
 
     // get all vacations the user follow
-    user.hashFollowing = await getFollowingVacationPerUser(user.userCode!)
-
-    console.log("user ", user);
+    user.likedVacations = await getFollowingVacationPerUser(user.userCode!)
+    console.log("backend liked vacation?", user);
     
+
     //generate token
     return generateToken(user);
 }

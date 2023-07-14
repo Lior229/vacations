@@ -1,15 +1,16 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../auth/authSlice';
 import { loginAsync } from '../../fetch/auth';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks'
 import { NavLink } from 'react-router-dom';
 import Credentials from '../../models/Credentials';
 import FormGroupWithError from '../FormGroupWithError/FormGroupWithError';
 import styles from './Login.module.scss';
 import validation from '../validation';
 import Loader from '../Loader/Loader';
+import { startLoading, stopLoading } from '../Loader/loaderSlice';
 
 interface LoginProps { }
 
@@ -18,18 +19,18 @@ const Login: FC<LoginProps> = () => {
     const { register, handleSubmit, formState} = useForm<Credentials>();
     const navigate = useNavigate();
     const [loginError, setloginError] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const { isLoading } = useAppSelector((state) => state.loaderState);
 
     const loginHandler = async (credentials: Credentials) => {
         try {
-            setIsLoading(true);
+            startLoading()
             const token = await loginAsync(credentials);
             dispatch(login(token));
             navigate('/home')
         } catch (err: any) {
             setloginError(err.response.data)
         } finally{
-            setIsLoading(false);
+            stopLoading()
         }
     }
 
