@@ -10,14 +10,14 @@ interface VacationCardProps {
 }
 
 const VacationCard: FC<VacationCardProps> = ({vacation}) => {
-    const { user } = useAppSelector((state) => state.authState);
+    // const { user } = useAppSelector((state) => state.authState);
     const imgSrc = `${BASE_API_URL}/vacations/images/${vacation.imageName}`;
     const startVacationDate = new Date(vacation.startDate)
     const endVacationDate = new Date(vacation.endDate)
     
     return (
         <div className={`Box ${styles.VacationCard}`}>
-            <div className={styles.VacationCard__header}>
+            <div className={styles.VacationCard__top}>
                 <img src={imgSrc} alt={vacation.destination}/>
                 <CardHeader vacation={vacation}/>
                 <div className={styles.VacationCard__header__title}>

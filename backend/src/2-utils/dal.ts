@@ -11,9 +11,9 @@ const connection = mysql.createPool({
     database: DB_DATABASE
 })
 
-const execute = <T>(sqlQuery: string): Promise<T> => {
+const execute = <T>(sqlQuery: string,values?:string[]): Promise<T> => {
     return new Promise<any>((resolve, reject) => {
-        connection.query(sqlQuery, (err, result) => {
+        connection.query(sqlQuery,values, (err, result) => {
             if (err) {
                 reject(new Error(err.sqlMessage || 'sql error', 500));
             } else {

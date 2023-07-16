@@ -2,7 +2,6 @@ import { OkPacket } from "mysql";
 import dal from "../2-utils/dal";
 import { ResourceNotFoundError, ValidationError } from "../4-models/Error";
 import Vacation from "../4-models/Vacation";
-import moment from 'moment';
 
 export const getAllVacations =async ():Promise<Vacation[]> => {
     try {
@@ -11,7 +10,7 @@ export const getAllVacations =async ():Promise<Vacation[]> => {
                      ON V.vacationCode = f.vacationCode
                      GROUP BY V.vacationCode, f.vacationCode
                      ORDER BY startDate`
-        let vacations = await dal.execute<Vacation[]>(sql)        
+        let vacations = await dal.execute<Vacation[]>(sql,[])        
         return vacations
     } catch (err) {
         throw err
@@ -19,25 +18,24 @@ export const getAllVacations =async ():Promise<Vacation[]> => {
 }
 
 export const addNewVacation =async (vacationToAdd:Vacation):Promise<Vacation> => {
+    const {destination,description,startDate,endDate,price,imageName} = vacationToAdd;
+    
     const error = vacationToAdd.validation()
     if (error) throw new ValidationError(error)
 
     const now = new Date();
-    if (vacationToAdd.startDate < now || vacationToAdd.endDate < now){
+    if (startDate < now || endDate < now){
     throw new ValidationError("vacation dates in the past")}
 
-    if (vacationToAdd.endDate < vacationToAdd.startDate){
+    if (endDate < startDate){
     throw new ValidationError("end date can not be later then start date")}
 
     try {
         const sql = `INSERT INTO vacations
         (destination,description,startDate,endDate,price,imageName)
-        VALUES ('${vacationToAdd.destination}','${vacationToAdd.description}',
-        '${vacationToAdd.startDate}','${vacationToAdd.endDate}',${vacationToAdd.price},'${vacationToAdd.imageName}');`
+        VALUES ('${destination}','${description}','${startDate}','${endDate}',${price},'${imageName}');`
         const newVacation = await dal.execute<Vacation>(sql)
         vacationToAdd.vacationCode = newVacation.vacationCode
-
-        //TODO: insert followers
 
         return vacationToAdd
     } catch (err) {

@@ -14,7 +14,6 @@ export const authSlice = createSlice({
     initialState: setInitialAuthState(),
     reducers: {
         register: (state, { payload: token }: PayloadAction<string>) => {
-            console.log('register state', token)
             handleToken(state, token);
         },
         login: (state, { payload: token }: PayloadAction<string>) => {

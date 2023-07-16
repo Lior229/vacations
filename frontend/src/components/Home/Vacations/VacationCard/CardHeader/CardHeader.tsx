@@ -1,8 +1,10 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styles from './CardHeader.module.scss';
 import Vacation from '../../../../../models/Vacation';
 import { useAppSelector } from '../../../../../hooks'
+// import { addFollower, removeFollower} from '../../vacationsSlice'
 import Role from '../../../../../models/Role';
+import { addFollower, deleteFollower } from '../../../../../fetch/followers';
 
 interface CardHeaderProps {
     vacation: Vacation;
@@ -10,10 +12,35 @@ interface CardHeaderProps {
 
 const CardHeader: FC<CardHeaderProps> = ({ vacation}) => {
     const { user } = useAppSelector((state) => state.authState);
-    const isUserLiked = user?.likedVacations[vacation.vacationCode!]
-    const likedstyle = isUserLiked? "red" : "black"
+    const isUserLiked = user?.likedVacations?.[vacation.vacationCode!]
+    const [isLiked, setLiked] = useState(isUserLiked? true : false)
+    const [likeCount, setLikedCount] = useState(vacation.numberOfFollowers)
+    let likedstyle = isLiked? "rgba(206, 63, 63, 0.829)" : "rgba(51, 51, 51, 0.05)"
+    const prevLike = useRef<boolean>(isLiked);
 
-    console.log("why not rendering?", isUserLiked, vacation.vacationCode);
+    useEffect(() => {
+        likedstyle = isLiked? "rgba(206, 63, 63, 0.829)" : "rgba(51, 51, 51, 0.05)"
+
+        if (isLiked && isLiked !== prevLike.current) {
+            setLikedCount((prevCounter) => ++prevCounter)
+            try {
+                addFollower(user!.userCode,vacation.vacationCode!)
+            } catch (error) {
+                console.log(error);
+            }         
+        }
+
+        if (!isLiked && isLiked !== prevLike.current) {
+            setLikedCount((prevCounter) => --prevCounter)
+            try {
+                deleteFollower(user!.userCode,vacation.vacationCode!)
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        prevLike.current = isLiked
+    }, [isLiked])
     
     const renderCardHeader = () => {
         if (user?.role === Role.Admin) {
@@ -25,14 +52,14 @@ const CardHeader: FC<CardHeaderProps> = ({ vacation}) => {
         )  
         } else {
             return (
-                <div className={styles.CardHeader} style={{color: likedstyle}}>
-                    <button>
-                            {vacation.numberOfFollowers === 0 && <span>be first to like</span>}
-                            {vacation.numberOfFollowers === 1 && isUserLiked && <span>you like!</span>}
-                            {vacation.numberOfFollowers > 1 && isUserLiked && 
-                                <span>you and {vacation.numberOfFollowers} liked!</span>}
-                            {vacation.numberOfFollowers > 0 && !isUserLiked && 
-                                <span> {vacation.numberOfFollowers} like</span>}
+                <div className={styles.CardHeader}>
+                    <button onClick={() => { setLiked((prev) => !prev)}} style={{backgroundColor: likedstyle}}>
+                            {likeCount === 0 && <span>be first to like</span>}
+                            {likeCount === 1 && isLiked && <span>you like!</span>}
+                            {likeCount > 1 && isLiked && 
+                                <span>you and {likeCount - 1} liked!</span>}
+                            {likeCount > 0 && !isLiked && 
+                                <span> {likeCount} like</span>}
                     </button>
                 </div>
             )  
@@ -40,11 +67,12 @@ const CardHeader: FC<CardHeaderProps> = ({ vacation}) => {
     }
 
     return (
-        <div className={styles.CardHeader}>
+        <>
             {renderCardHeader()}
-        </div>
+        </>
     )
 
 }
 
 export default CardHeader;
+

@@ -8,7 +8,7 @@ import path from "path";
 const router = express.Router(); 
 
 // GET http://localhost:3001/api/vacations
-router.get('/vacations', async (request: Request, response: Response, next: NextFunction) => {
+router.get('/vacations',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
 // router.get('/vacations',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const vacations = await getAllVacations()
@@ -59,6 +59,8 @@ router.get("/vacations/images/:imageName", async (request: Request, response: Re
         const absolutePath = path.join(__dirname, '..', 'assets', 'images', imageName);
         response.sendFile(absolutePath);
     } catch (err: any) {
+        console.log("here right ???");
+        
         next(err);
     }
 

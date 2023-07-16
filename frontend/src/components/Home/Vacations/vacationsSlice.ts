@@ -14,8 +14,8 @@ export const vacationSlice = createSlice({
     name: 'vacations',
     initialState: initialState,
     reducers: {
-        setVacations: (state, { payload: vacation }: PayloadAction<Vacation[]>) => {
-            state.vacations = vacation;
+        setVacations: (state, { payload: vacations }: PayloadAction<Vacation[]>) => {
+            state.vacations = vacations;
         },
         setVacation: (state, action: PayloadAction<Vacation>) => {
             const { payload } = action; 
@@ -32,15 +32,9 @@ export const vacationSlice = createSlice({
         deleteVacation: (state, { payload: vacationCode }: PayloadAction<number>) => {
             const indexToDelete = state.vacations.findIndex((v) => v.vacationCode === vacationCode);
             if (indexToDelete >= 0) {state.vacations.splice(indexToDelete, 1)}
-        },
-        addFollower: (state, { payload: vacation }: PayloadAction<Vacation>) => {
-            state.vacation!.numberOfFollowers++
-        },
-        removeFollower: (state, { payload: vacation }: PayloadAction<Vacation>) => {
-            state.vacation!.numberOfFollowers--
         }
     }
 });
 
-export const { setVacations, addVacation, updateVacation, deleteVacation, setVacation, addFollower, removeFollower} = vacationSlice.actions;
+export const { setVacations, addVacation, updateVacation, deleteVacation, setVacation} = vacationSlice.actions;
 export default vacationSlice.reducer;
