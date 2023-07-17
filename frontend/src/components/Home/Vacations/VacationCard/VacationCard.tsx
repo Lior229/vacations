@@ -20,7 +20,7 @@ const VacationCard: FC<VacationCardProps> = ({vacation}) => {
             <div className={styles.VacationCard__top}>
                 <img src={imgSrc} alt={vacation.destination}/>
                 <CardHeader vacation={vacation}/>
-                <div className={styles.VacationCard__header__title}>
+                <div className={styles.VacationCard__top__title}>
                     <h1>{vacation.destination}</h1>
                     <h3>{startVacationDate.toLocaleDateString()} - {endVacationDate.toLocaleDateString()}</h3>
                 </div>
