@@ -12,7 +12,7 @@ router.get('/vacations',verifyLoggedIn, async (request: Request, response: Respo
 // router.get('/vacations',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const vacations = await getAllVacations()
-        response.json(vacations)
+        response.status(200).json(vacations)
     } catch (err: any) {
         next(err);
     }

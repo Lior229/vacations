@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks'
 import styles from './Home.module.scss';
 import { getVacations } from '../../fetch/vacations';
@@ -7,7 +7,7 @@ import Loader from '../Loader/Loader';
 import Vacations from './Vacations/Vacations';
 import {logout} from '../../auth/authSlice'
 import { startLoading, stopLoading } from '../Loader/loaderSlice';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Role from '../../models/Role';
 
 interface HomeProps { }
@@ -16,6 +16,8 @@ const Home: FC<HomeProps> = () => {
     const dispatch = useAppDispatch();
     const { isLoading } = useAppSelector((state) => state.loaderState);
     const { user } = useAppSelector((state) => state.authState);
+    const [filter, setFilter] = useState("")
+    const navigate = useNavigate();
     
     useEffect(() => {      
         startLoading()
@@ -26,10 +28,11 @@ const Home: FC<HomeProps> = () => {
         }).finally(() => {
             stopLoading()
         });
-    },[])
+    })
 
     const logOutHandler = () => {
         dispatch(logout());
+        navigate('/login', { replace: true });
     }
 
     if (isLoading) {
@@ -40,11 +43,29 @@ const Home: FC<HomeProps> = () => {
         )
     }
 
+    const actionBar = () => {
+        if (user?.role===Role.Admin) {
+            return(
+                <div className={styles.Home__actionBar}>
+                    <NavLink to="/add"> Add new vacation </NavLink>
+                </div>
+            )
+        }
+
+        return(
+            <div className={styles.Home__actionBar}>
+                <button onClick={()=>{setFilter("following")}}>show follow vacation </button>
+                <button onClick={()=>{setFilter("future")}}>show future vacations </button>
+                <button onClick={()=>{setFilter("active")}}>show active vacations  </button>
+            </div>
+        )
+    }
+
     return (
         <div className={styles.Home}>
-            {user?.role===Role.Admin &&  <NavLink to="/add"> Add new vacation </NavLink> }
-            {user &&  <NavLink to="/login" onClick={logOutHandler}> Logout </NavLink> }
-            <Vacations/>
+            {actionBar()}
+            {user && <button className={styles.Home__Logout} onClick={logOutHandler}> Logout </button> }
+            <Vacations filter={filter}/>
         </div>
     )
 }

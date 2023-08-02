@@ -3,3 +3,38 @@
     flex-wrap: wrap;
     gap: 12px;
 }
+
+ul.react_paginate {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    list-style-type: none;
+    padding: 0 5rem;
+  }
+  
+  ul.react_paginate li a {
+    border-radius: 7px;
+    padding: 0.1rem 1rem;
+    border: gray 1px solid;
+    cursor: pointer;
+  }
+  ul.react_paginate li.previous a,
+  ul.react_paginate li.next a,
+  ul.react_paginate li.break a {
+    border-color: transparent;
+  }
+  ul.react_paginate li.selected a {
+    background-color: #0366d6;
+    border-color: transparent;
+    color: white;
+    min-width: 32px;
+  }
+  ul.react_paginate li.disabled a {
+    color: grey;
+  }
+  ul.react_paginate li.disable,
+  ul.react_paginate li.disabled a {
+    cursor: default;
+  }
+  

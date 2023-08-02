@@ -22,7 +22,7 @@ router.post('/users/login', async (request: Request, response: Response, next: N
     try {
         const credentials = new Credentials(request.body);
         const token = await login(credentials);
-        response.json(token);
+        response.status(200).json(token);
     } catch (err) {
         next(err)
     }
