@@ -1,22 +1,26 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import styles from './CardHeader.module.scss';
 import Vacation from '../../../../../models/Vacation';
-import { useAppSelector } from '../../../../../hooks'
-// import { addFollower, removeFollower} from '../../vacationsSlice'
+import { useAppDispatch, useAppSelector } from '../../../../../hooks'
 import Role from '../../../../../models/Role';
-import { addFollower, deleteFollower } from '../../../../../fetch/followers';
+import { addFollower, deleteAllFollowerOfVacation, deleteFollower } from '../../../../../fetch/followers';
+import { deleteVacation } from '../../vacationsSlice';
+import { deleteVacation as deleteVacationaAync } from '../../../../../fetch/vacations'
+import { useNavigate } from 'react-router-dom';
 
 interface CardHeaderProps {
     vacation: Vacation;
 }
 
-const CardHeader: FC<CardHeaderProps> = ({ vacation}) => {
+const CardHeader: FC<CardHeaderProps> = ({ vacation }) => {
     const { user } = useAppSelector((state) => state.authState);
     const isUserLiked = user?.likedVacations?.[vacation.vacationCode!]
     const [isLiked, setLiked] = useState(isUserLiked? true : false)
     const [likeCount, setLikedCount] = useState(vacation.numberOfFollowers)
     let likedstyle = isLiked? "rgba(206, 63, 63, 0.829)" : "rgba(51, 51, 51, 0.05)"
     const prevLike = useRef<boolean>(isLiked);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         likedstyle = isLiked? "rgba(206, 63, 63, 0.829)" : "rgba(51, 51, 51, 0.05)"
@@ -41,13 +45,28 @@ const CardHeader: FC<CardHeaderProps> = ({ vacation}) => {
 
         prevLike.current = isLiked
     }, [isLiked])
+
+    const deleteHandler = async () => {
+        console.log("delete");
+            try {
+                const success = await deleteVacationaAync(vacation.vacationCode!)
+                if (success) {
+                    dispatch(deleteVacation(vacation.vacationCode!))
+                    await deleteAllFollowerOfVacation(vacation.vacationCode!)
+                    navigate('/home');
+                }
+            } catch (err) {
+                console.log('delete error', err)
+            }
+    }
+
     
     const renderCardHeader = () => {
         if (user?.role === Role.Admin) {
             return (
                 <div className={styles.CardHeader}>
                     <button>edit</button>
-                    <button>delete</button>
+                    <button onClick={deleteHandler} >delete</button>
                 </div>
         )  
         } else {

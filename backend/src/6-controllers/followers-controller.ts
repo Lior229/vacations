@@ -4,7 +4,8 @@ import User from "../4-models/User";
 import Credentials from "../4-models/Credentials";
 import { log } from "console";
 import verifyLoggedIn from "../3-middleware/verify-logged-in";
-import { addFollower, deleteFollower } from "../5-logic/followers-logic";
+import { addFollower, deleteAllFollowerOfVacation, deleteFollower } from "../5-logic/followers-logic";
+import verifyAdmin from "../3-middleware/verify-admin";
 
 const router = express.Router(); 
 
@@ -19,7 +20,7 @@ router.post('/followers/add',verifyLoggedIn, async (request: Request, response: 
     }
 });
 
-// POST http://localhost:3001/api/followers/remove
+// DELETE http://localhost:3001/api/followers/remove
 router.delete('/followers/remove',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const {userCode, vacationCode} = request.body;
@@ -30,4 +31,14 @@ router.delete('/followers/remove',verifyLoggedIn, async (request: Request, respo
     }
 });
 
+// DELETE http://localhost:3001/api/followers/remove/:vacationCode'
+router.delete('/followers/remove/:vacationCode',verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const vacationCode = +request.params.vacationCode
+        deleteAllFollowerOfVacation(vacationCode)
+        response.status(201).json(true);
+    } catch (err) {
+        next(err)
+    }
+});
 export default router;

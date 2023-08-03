@@ -11,10 +11,19 @@ interface VacationsProps {
 
 const Vacations: FC<VacationsProps> = ({filter}) => {
     let { vacations } = useAppSelector((state) => state.vacationsState);
+    let allVacations = vacations
+    const { user } = useAppSelector((state) => state.authState);
+
     const now = moment()
+
     switch (filter) {
         case "following":
             console.log("following");
+            const followingVacations = vacations.filter((vacation)=>{
+                // const { vacationCode } = vacation;
+                if ( user?.likedVacations?.[vacation.vacationCode!]) return vacation
+            })
+            vacations = followingVacations;
             break;
         case "future":
             console.log("future");
@@ -23,11 +32,9 @@ const Vacations: FC<VacationsProps> = ({filter}) => {
                 console.log(startDate);
                 if (now.isBefore(startDate)) return vacation
             })
-            console.log(futureVacations);
             vacations = futureVacations;
             break;
         case "active":
-            console.log("active");
             const activeVacations = vacations.filter((vacation)=>{
                 const { startDate, endDate } = vacation;
                 if (now.isBetween(startDate,endDate)) return vacation
@@ -36,7 +43,7 @@ const Vacations: FC<VacationsProps> = ({filter}) => {
             vacations = activeVacations;
             break;
         default:
-            console.log("all vacations");
+            vacations = allVacations
         }
     
     const [itemOffset, setItemOffset] = useState(0);

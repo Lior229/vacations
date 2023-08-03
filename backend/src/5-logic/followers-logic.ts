@@ -40,3 +40,9 @@ export const deleteFollower =async (vacationCode:number, userCode:number):Promis
         throw new ValidationError("user or vacation do not found")
     }
 }
+
+export const deleteAllFollowerOfVacation =async (vacationCode:number):Promise<void> => {
+    const sql = `DELETE FROM followers 
+                 WHERE vacationCode = ${vacationCode}`;
+    const info = await dal.execute<OkPacket>(sql);
+}

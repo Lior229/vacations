@@ -35,6 +35,10 @@ const Home: FC<HomeProps> = () => {
         navigate('/login', { replace: true });
     }
 
+    const downloadCsv = () =>{
+        alert("download Csv")
+    }
+
     if (isLoading) {
         return (
             <div className={styles.Home__loaderContainer}>
@@ -48,23 +52,27 @@ const Home: FC<HomeProps> = () => {
             return(
                 <div className={styles.Home__actionBar}>
                     <NavLink to="/add"> Add new vacation </NavLink>
+                    <NavLink to="/report"> Report </NavLink>
+                    <button onClick={downloadCsv}>download vacation list </button>
                 </div>
             )
         }
 
         return(
             <div className={styles.Home__actionBar}>
-                <button onClick={()=>{setFilter("following")}}>show follow vacation </button>
-                <button onClick={()=>{setFilter("future")}}>show future vacations </button>
-                <button onClick={()=>{setFilter("active")}}>show active vacations  </button>
+                <button onClick={()=>{setFilter("")}}>Show all vacations  </button>
+                <button onClick={()=>{setFilter("following")}}>Show following vacation </button>
+                <button onClick={()=>{setFilter("future")}}>Show future vacations </button>
+                <button onClick={()=>{setFilter("active")}}>Show active vacations  </button>
             </div>
         )
     }
 
     return (
         <div className={styles.Home}>
+            <div className={styles.Home__userName}> wellcom {user?.firstName} {user?.lastName} </div>
             {actionBar()}
-            {user && <button className={styles.Home__Logout} onClick={logOutHandler}> Logout </button> }
+            <button className={styles.Home__Logout} onClick={logOutHandler}> Logout </button>
             <Vacations filter={filter}/>
         </div>
     )
