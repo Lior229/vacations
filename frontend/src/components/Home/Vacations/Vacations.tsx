@@ -20,7 +20,6 @@ const Vacations: FC<VacationsProps> = ({filter}) => {
         case "following":
             console.log("following");
             const followingVacations = vacations.filter((vacation)=>{
-                // const { vacationCode } = vacation;
                 if ( user?.likedVacations?.[vacation.vacationCode!]) return vacation
             })
             vacations = followingVacations;

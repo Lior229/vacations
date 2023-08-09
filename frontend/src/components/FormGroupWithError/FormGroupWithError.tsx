@@ -7,7 +7,6 @@ interface FormGroupWithErrorProps {
 }
 
 const FormGroupWithError: FC<FormGroupWithErrorProps> = (props) => {
-
     const { error, children } = props;
 
     return (

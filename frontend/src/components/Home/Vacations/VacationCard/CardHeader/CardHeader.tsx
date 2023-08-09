@@ -6,6 +6,7 @@ import Role from '../../../../../models/Role';
 import { addFollower, deleteAllFollowerOfVacation, deleteFollower } from '../../../../../fetch/followers';
 import { deleteVacation } from '../../vacationsSlice';
 import { deleteVacation as deleteVacationaAync } from '../../../../../fetch/vacations'
+import { addFollowing, removeFollowing } from '../../../../../auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 interface CardHeaderProps {
@@ -28,18 +29,30 @@ const CardHeader: FC<CardHeaderProps> = ({ vacation }) => {
         if (isLiked && isLiked !== prevLike.current) {
             setLikedCount((prevCounter) => ++prevCounter)
             try {
-                addFollower(user!.userCode,vacation.vacationCode!)
+                addFollower(user!.userCode,vacation.vacationCode!).then(() =>{
+                    dispatch(addFollowing(vacation.vacationCode!)) 
+                }).catch((err) => {
+                    console.log(err.message)
+                })
             } catch (error) {
                 console.log(error);
+            }finally{
+                window.location.reload();
             }         
         }
 
         if (!isLiked && isLiked !== prevLike.current) {
             setLikedCount((prevCounter) => --prevCounter)
             try {
-                deleteFollower(user!.userCode,vacation.vacationCode!)
+                deleteFollower(user!.userCode,vacation.vacationCode!).then(() =>{
+                    dispatch(removeFollowing(vacation.vacationCode!))
+                }).catch((err) => {
+                    console.log(err.message)
+                })
             } catch (error) {
                 console.log(error);
+            }finally{
+                window.location.reload();
             }
         }
 
@@ -47,17 +60,25 @@ const CardHeader: FC<CardHeaderProps> = ({ vacation }) => {
     }, [isLiked])
 
     const deleteHandler = async () => {
-        console.log("delete");
             try {
                 const success = await deleteVacationaAync(vacation.vacationCode!)
                 if (success) {
                     dispatch(deleteVacation(vacation.vacationCode!))
                     await deleteAllFollowerOfVacation(vacation.vacationCode!)
-                    navigate('/home');
                 }
             } catch (err) {
                 console.log('delete error', err)
+            }finally{
+                window.location.reload();
             }
+    }
+
+    const editHandler =  () => {
+        navigate("/edit", {
+            state: {
+                vacation: vacation
+            },
+        });
     }
 
     
@@ -65,7 +86,7 @@ const CardHeader: FC<CardHeaderProps> = ({ vacation }) => {
         if (user?.role === Role.Admin) {
             return (
                 <div className={styles.CardHeader}>
-                    <button>edit</button>
+                    <button onClick={editHandler}>edit</button>
                     <button onClick={deleteHandler} >delete</button>
                 </div>
         )  

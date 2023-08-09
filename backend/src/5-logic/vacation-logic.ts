@@ -2,6 +2,7 @@ import { OkPacket } from "mysql";
 import dal from "../2-utils/dal";
 import { ResourceNotFoundError, ValidationError } from "../4-models/Error";
 import Vacation from "../4-models/Vacation";
+import fs from 'fs';
 
 export const getAllVacations =async ():Promise<Vacation[]> => {
     try {
@@ -31,6 +32,12 @@ export const addNewVacation =async (vacationToAdd:Vacation):Promise<Vacation> =>
     throw new ValidationError("end date can not be later then start date")}
 
     try {
+
+        if (vacationToAdd.image) {
+            await vacationToAdd.image.mv(`./src/assets/images/${vacationToAdd.imageName}`);
+            delete vacationToAdd.image;
+        }
+
         const sql = `INSERT INTO vacations
         (destination,description,startDate,endDate,price,imageName)
         VALUES ('${destination}','${description}','${startDate}','${endDate}',${price},'${imageName}');`
@@ -51,7 +58,13 @@ export const deleteVacation =async (vacationCodeToDelete:number):Promise<void> =
         throw new ResourceNotFoundError(vacationCodeToDelete);
     }
 
-    // TODO: delete all followers
+    const vacations = await getAllVacations();
+    const index = vacations.findIndex((v) => v.vacationCode === vacationCodeToDelete);
+    const currentImage = vacations[index].imageName;
+    
+    if (fs.existsSync(`./src/assets/images/${currentImage}`)) {
+        fs.unlinkSync(`./src/assets/images/${currentImage}`);
+    }
 }
 
 export const updateVacation =async (vacationToUpdate:Vacation):Promise<Vacation> => {
@@ -59,7 +72,7 @@ export const updateVacation =async (vacationToUpdate:Vacation):Promise<Vacation>
         const error = vacationToUpdate.validation()
         if (error) throw new ValidationError(error)
 
-        const sql = `UPDATE products SET 
+        const sql = `UPDATE vacations SET 
                 destination = '${vacationToUpdate.destination}',
                 description = '${vacationToUpdate.description}',
                 startDate = '${vacationToUpdate.startDate}',
@@ -76,6 +89,21 @@ export const updateVacation =async (vacationToUpdate:Vacation):Promise<Vacation>
     }
 
     vacationToUpdate.vacationCode = info.insertId
+
+    const vacations = await getAllVacations();
+    const index = vacations.findIndex((v) => v.vacationCode === vacationToUpdate.vacationCode);
+    
+    if (vacationToUpdate.image) {
+        const currentImage = vacations[index]?.imageName;
+    
+        if (fs.existsSync(`./src/assets/images/${currentImage}`)) {
+           fs.unlinkSync(`./src/assets/images/${currentImage}`);
+        }
+    
+        await vacationToUpdate.image.mv(`./src/assets/images/${vacationToUpdate.imageName}`);
+        delete vacationToUpdate.image;
+    }
+
     return vacationToUpdate;
     
 } else {

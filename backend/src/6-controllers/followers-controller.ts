@@ -1,8 +1,4 @@
 import express, { Request, Response, NextFunction } from "express";
-import { getUserByEmail, login, register } from '../5-logic/users-logic'
-import User from "../4-models/User";
-import Credentials from "../4-models/Credentials";
-import { log } from "console";
 import verifyLoggedIn from "../3-middleware/verify-logged-in";
 import { addFollower, deleteAllFollowerOfVacation, deleteFollower } from "../5-logic/followers-logic";
 import verifyAdmin from "../3-middleware/verify-admin";
@@ -13,6 +9,7 @@ const router = express.Router();
 router.post('/followers/add',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const {userCode, vacationCode} = request.body;
+        console.log(`usrecode: ${userCode} vacationcode: ${vacationCode}`);
         await addFollower(userCode, vacationCode)
         response.status(201).json(true);
     } catch (err) {

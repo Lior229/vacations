@@ -5,16 +5,17 @@
 
     label {
         display: inline-block;
-        max-width: 100%;
+        max-width: 50%;
         margin-bottom: 5px;
         font-weight: bold;
     }
 
     input {
         display: block;
-        width: 100%;
+        width: 70%;
         height: 34px;
         padding: 6px 12px;
+        margin: auto;
         line-height: 1.5;
         color: #555;
         background-color: #fff;

@@ -19,10 +19,10 @@ export const getFollowingVacationPerUser =async (userCode:number):Promise<{[key:
     }
 }
 
-export const addFollower =async (vacationCode:number, userCode:number):Promise<void> => {
+export const addFollower =async (userCode:number, vacationCode:number):Promise<void> => {    
     const sql = `INSERT INTO followers (userCode,VacationCode)
                  VALUES (${userCode}, ${vacationCode});`;
-                 
+            
     const info = await dal.execute<OkPacket>(sql);
 
     if (info.affectedRows === 0) {

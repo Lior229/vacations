@@ -9,7 +9,6 @@ const router = express.Router();
 
 // GET http://localhost:3001/api/vacations
 router.get('/vacations',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
-// router.get('/vacations',verifyLoggedIn, async (request: Request, response: Response, next: NextFunction) => {
     try {
         const vacations = await getAllVacations()
         response.status(200).json(vacations)
@@ -21,6 +20,8 @@ router.get('/vacations',verifyLoggedIn, async (request: Request, response: Respo
 // POST http://localhost:3001/api/vacations/
 router.post('/vacations',verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
+        console.log(request.body);
+        request.body.image = request.files?.image;
         const newVacation = new Vacation(request.body);
         const addedVacation = await addNewVacation(newVacation);
         response.status(201).json(addedVacation);
@@ -32,7 +33,12 @@ router.post('/vacations',verifyAdmin, async (request: Request, response: Respons
 //PUT http://localhost:3001/api/vacations/update
 router.put('/vacations/update',verifyAdmin, async (request: Request, response: Response, next: NextFunction) => {
     try {
+        console.log('request.body', request.body);
+        
+        request.body.image = request.files?.image;
         const vacation = new Vacation(request.body);
+        console.log(vacation);
+        
         const updatedVacation = await updateVacation(vacation) 
         response.json(updatedVacation);
     } catch (err) {
@@ -53,17 +59,13 @@ router.delete('/vacations/:vacationCode',verifyAdmin, async (request: Request, r
 
 //GET http://localhost:3001/api/vacations/images/:imageName
 router.get("/vacations/images/:imageName", async (request: Request, response: Response, next: NextFunction) => {
-
     try {
         const imageName = request.params.imageName;
         const absolutePath = path.join(__dirname, '..', 'assets', 'images', imageName);
         response.sendFile(absolutePath);
     } catch (err: any) {
-        console.log("here right ???");
-        
         next(err);
     }
-
 })
 
 export default router;
